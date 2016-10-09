@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,render_template
 import feedparser
 
 
@@ -14,17 +14,19 @@ RSS_FEEDS = {'bbc':'http://feeds.bbci.co.uk/news/rss.xml',
 
 @app.route('/')
 @app.route('/<publication>')
-def get_news(publication):
+def get_news(publication='fox'):
 	feed=feedparser.parse(RSS_FEEDS[publication])
-	first_article=feed['entries'][0]
-	return '''<html>
-	   <body>
-	    <h1>BBC headlines:</h1>
-	    <i>{0}</i></br>
-	    <b>{1}</b></br>
-	    <p>{2}</p>
-	   </body>
-	</htmL>'''.format(first_article.get("title"),first_article.get("published"),first_article.get("summary"))
+	#first_article=feed['entries'][0]
+	articles=feed['entries']
+	return render_template('home.html',articles=articles)
+	# return '''<html>
+	#    <body>
+	#     <h1>BBC headlines:</h1>
+	#     <i>{0}</i></br>
+	#     <b>{1}</b></br>
+	#     <p>{2}</p>
+	#    </body>
+	# </htmL>'''.format(first_article.get("title"),first_article.get("published"),first_article.get("summary"))
 
 if __name__=='__main__':
 	app.debug=True
